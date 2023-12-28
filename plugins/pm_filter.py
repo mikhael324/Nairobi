@@ -727,9 +727,9 @@ async def auto_filter(client, msg, spoll=False):
             await message.reply_text(cap, reply_markup=InlineKeyboardMarkup(btn))
     else:
         dll=await message.reply_text(cap, reply_markup=InlineKeyboardMarkup(btn))
-        await asyncio.sleep(120)
+        await asyncio.sleep(60)
         fll=await dll.edit_text(f"<b>🗑️ Filter Deleted After 2 Min ‼️ \n 🔍Search Again !!</b>")
-        await asyncio.sleep(120)
+        await asyncio.sleep(60)
         await fll.delete()
         await message.delete()
     if spoll:
@@ -776,7 +776,7 @@ async def advantage_spell_chok(msg):
         [InlineKeyboardButton("❌ Close ❌", callback_data="close_data")]
     )
     s = await message.reply_text(f"<b>👋 Hello {message.from_user.mention},\n\nI Couldn't Find The Movie: '{search}' \n\nSelect If You Meant Any One Of These 👇 & Wait Few Seconds ‼️</b>", reply_markup=InlineKeyboardMarkup(buttons))
-    await asyncio.sleep(120)
+    await asyncio.sleep(60)
     await s.delete()
     try:
         await message.delete()
