@@ -75,5 +75,5 @@ async def handle_join_request(client, message):
         await join_reqs.add_user(user_id, message.from_user.first_name, message.from_user.username, message.date, channel)
         await message.reply_text("Your join request has been received.")
 
-app.run()
+
         
