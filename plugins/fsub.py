@@ -107,4 +107,26 @@ async def ForceSub(bot: Client, event: Message, file_id: str = False, mode="chec
                 await event.reply(
                     text=text,
                     quote=True,
+                    reply_markup=InlineKeyboardMarkup(buttons),
+                    parse_mode=enums.ParseMode.MARKDOWN,
+                )
+            return False
+
+        # If the user has requested to join or already joined both channels
+        return True
+
+    except Exception as err:
+        print(f"Something Went Wrong! Unable to do Force Subscribe.\nError: {err}")
+        await event.reply(
+            text="Something went Wrong.",
+            parse_mode=enums.ParseMode.MARKDOWN,
+            disable_web_page_preview=True
+        )
+        return False
+
+
+def set_global_invite(url: str):
+    global INVITE_LINK
+    INVITE_LINK = url
+            
             
