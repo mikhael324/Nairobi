@@ -28,13 +28,26 @@ class JoinReqs:
         except Exception as e:
             print(f"Error adding user: {e}")
 
-    async def get_user(self, user_id, channel):
-        if channel == 1 and self.col1:
-            user = await self.col1.find_one({"user_id": int(user_id)})
-            return user
-        elif channel == 2 and self.col2:
-            user = await self.col2.find_one({"user_id": int(user_id)})
-            return user
+    # Modify the get_user method
+    async def get_user(self, user_id, channel=None):
+        if channel == 1:
+            if self.col1:
+                user = await self.col1.find_one({"user_id": int(user_id)})
+                if user:
+                    return user
+        elif channel == 2:
+            if self.col2:
+                user = await self.col2.find_one({"user_id": int(user_id)})
+                return user
+        else:
+            # If channel is not specified or invalid, search in both collections
+            if self.col1:
+                user = await self.col1.find_one({"user_id": int(user_id)})
+                if user:
+                    return user
+            if self.col2:
+                user = await self.col2.find_one({"user_id": int(user_id)})
+                return user
 
     async def get_all_users(self, channel):
         users = []
