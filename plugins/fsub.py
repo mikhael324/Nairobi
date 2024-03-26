@@ -11,7 +11,7 @@ from logging import getLogger
 logger = getLogger(__name__)
 INVITE_LINK1 = None
 INVITE_LINK2 = None
-db = JoinReqs
+db = JoinReqs()
 
 async def ForceSub(bot: Client, event: Message, file_id: str = False, mode="checksub"):
 
@@ -66,15 +66,15 @@ async def ForceSub(bot: Client, event: Message, file_id: str = False, mode="chec
         return False
 
     # Main Logic
-    if JOIN_REQS_DB and db().isActive():
+    if JOIN_REQS_DB and db.isActive():
         try:
             # Check if User is Requested to Join Channel1
-            user1 = await db().get_user(event.from_user.id)
+            user1 = await db.get_user(event.from_user.id)
             if user1 and user1["user_id"] == event.from_user.id:
                 return True
 
             # Check if User is Requested to Join Channel2
-            user2 = await db().get_user(event.from_user.id)
+            user2 = await db.get_user(event.from_user.id)
             if user2 and user2["user_id"] == event.from_user.id:
                 return True
                 
