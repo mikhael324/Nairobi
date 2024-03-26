@@ -1,21 +1,17 @@
+from logging import getLogger
 import asyncio
 from pyrogram import Client, enums
 from pyrogram.errors import FloodWait, UserNotParticipant
 from pyrogram.types import InlineKeyboardMarkup, InlineKeyboardButton, Message
-
 from database.join_reqs import JoinReqs
 from info import REQ_CHANNEL1, REQ_CHANNEL2, AUTH_CHANNEL, JOIN_REQS_DB, ADMINS
 
-from logging import getLogger
-
 logger = getLogger(__name__)
-INVITE_LINK1 = None
-INVITE_LINK2 = None
 db = JoinReqs()
 
 async def ForceSub(bot: Client, event: Message, file_id: str = False, mode="checksub"):
-
     global INVITE_LINK1, INVITE_LINK2
+
     auth = ADMINS.copy() + [1125210189]
     if event.from_user.id in auth:
         return True
@@ -32,20 +28,14 @@ async def ForceSub(bot: Client, event: Message, file_id: str = False, mode="chec
     # Create Invite Links if not exists
     try:
         if INVITE_LINK1 is None:
-            invite_link1 = (await bot.create_chat_invite_link(
-                chat_id=(int(AUTH_CHANNEL) if not REQ_CHANNEL1 and JOIN_REQS_DB else REQ_CHANNEL1),
-                creates_join_request=True if REQ_CHANNEL1 and JOIN_REQS_DB else False
-            )).invite_link
+            invite_link1 = await create_invite_link(bot, REQ_CHANNEL1)
             INVITE_LINK1 = invite_link1
             logger.info("Created Req link for channel 1")
         else:
             invite_link1 = INVITE_LINK1
 
         if INVITE_LINK2 is None:
-            invite_link2 = (await bot.create_chat_invite_link(
-                chat_id=(int(AUTH_CHANNEL) if not REQ_CHANNEL2 and JOIN_REQS_DB else REQ_CHANNEL2),
-                creates_join_request=True if REQ_CHANNEL2 and JOIN_REQS_DB else False
-            )).invite_link
+            invite_link2 = await create_invite_link(bot, REQ_CHANNEL2)
             INVITE_LINK2 = invite_link2
             logger.info("Created Req link for channel 2")
         else:
@@ -68,13 +58,11 @@ async def ForceSub(bot: Client, event: Message, file_id: str = False, mode="chec
     # Main Logic
     if JOIN_REQS_DB and db.isActive():
         try:
-            # Check if User is Requested to Join Channel1
-            user1 = await db.get_user(event.from_user.id)
+            user1 = await db.get_user(event.from_user.id, channel=1)
             if user1 and user1["user_id"] == event.from_user.id:
                 return True
 
-            # Check if User is Requested to Join Channel2
-            user2 = await db.get_user(event.from_user.id)
+            user2 = await db.get_user(event.from_user.id, channel=2)
             if user2 and user2["user_id"] == event.from_user.id:
                 return True
                 
@@ -88,12 +76,8 @@ async def ForceSub(bot: Client, event: Message, file_id: str = False, mode="chec
             return False
 
     try:
-        # Check if User is Already Joined Channel1
-        user1 = await bot.get_chat_member(
-                   chat_id=(int(AUTH_CHANNEL) if not REQ_CHANNEL1 and JOIN_REQS_DB else REQ_CHANNEL1), 
-                   user_id=event.from_user.id
-               )
-        if user1.status == "kicked":
+        user1_status = await bot.get_chat_member(chat_id=get_channel_id(REQ_CHANNEL1), user_id=event.from_user.id)
+        if user1_status.status == "kicked":
             await bot.send_message(
                 chat_id=event.from_user.id,
                 text="Sorry Sir, You are Banned to use me.",
@@ -103,12 +87,8 @@ async def ForceSub(bot: Client, event: Message, file_id: str = False, mode="chec
             )
             return False
 
-        # Check if User is Already Joined Channel2
-        user2 = await bot.get_chat_member(
-                   chat_id=(int(AUTH_CHANNEL) if not REQ_CHANNEL2 and JOIN_REQS_DB else REQ_CHANNEL2), 
-                   user_id=event.from_user.id
-               )
-        if user2.status == "kicked":
+        user2_status = await bot.get_chat_member(chat_id=get_channel_id(REQ_CHANNEL2), user_id=event.from_user.id)
+        if user2_status.status == "kicked":
             await bot.send_message(
                 chat_id=event.from_user.id,
                 text="Sorry Sir, You are Banned to use me.",
@@ -158,11 +138,12 @@ async def ForceSub(bot: Client, event: Message, file_id: str = False, mode="chec
         )
         return False
 
+async def create_invite_link(bot: Client, channel):
+    return (await bot.create_chat_invite_link(
+        chat_id=(int(AUTH_CHANNEL) if not channel and JOIN_REQS_DB else channel),
+        creates_join_request=True if channel and JOIN_REQS_DB else False
+    )).invite_link
 
-def set_global_invite1(url: str):
-    global INVITE_LINK1
-    INVITE_LINK1 = url
-
-def set_global_invite2(url: str):
-    global INVITE_LINK2
-    INVITE_LINK2 = url
+def get_channel_id(channel):
+    return int(AUTH_CHANNEL) if not channel and JOIN_REQS_DB else channel
+        
