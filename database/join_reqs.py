@@ -19,7 +19,7 @@ class JoinReqs:
     def isActive(self):
         return self.client is not None
 
-    async def add_user(self, user_id, first_name, username, date, channel):
+    async def add_user(self, user_id, first_name, username, date, channel=None):
         try:
             if channel == 1 and self.col1:
                 await self.col1.insert_one({"_id": int(user_id), "user_id": int(user_id), "first_name": first_name, "username": username, "date": date})
@@ -50,13 +50,13 @@ class JoinReqs:
         elif channel == 2 and self.col2:
             await self.col2.delete_one({"user_id": int(user_id)})
 
-    async def delete_all_users(self, channel):
+    async def delete_all_users(self, channel=None):
         if channel == 1 and self.col1:
             await self.col1.delete_many({})
         elif channel == 2 and self.col2:
             await self.col2.delete_many({})
 
-    async def get_all_users_count(self, channel):
+    async def get_all_users_count(self, channel=None):
         count = 0
         if channel == 1 and self.col1:
             count += await self.col1.count_documents({})
