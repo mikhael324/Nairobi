@@ -45,7 +45,7 @@ class temp(object):
     GROUPS_CANCEL = False
 
 async def is_subscribed(bot, query):
-    if not (AUTH_CHANNEL or REQ_CHANNEL):
+    if not (AUTH_CHANNEL or REQ_CHANNEL1 or REQ_CHANNEL2):
         return True
     elif query.from_user.id in ADMINS:
         return True
@@ -56,18 +56,22 @@ async def is_subscribed(bot, query):
             return True
         else:
             return False
+
     try:
-        user = await bot.get_chat_member(AUTH_CHANNEL, query.from_user.id)
+        user1 = await bot.get_chat_member(REQ_CHANNEL1, query.from_user.id)
+        user2 = await bot.get_chat_member(REQ_CHANNEL2, query.from_user.id)
     except UserNotParticipant:
         return False
     except Exception as e:
         logger.exception(e)
         return False
     else:
-        if not user.status == enums.ChatMemberStatus.BANNED:
+        if (user1.status == enums.ChatMemberStatus.MEMBER or user1.status == enums.ChatMemberStatus.ADMINISTRATOR) and \
+           (user2.status == enums.ChatMemberStatus.MEMBER or user2.status == enums.ChatMemberStatus.ADMINISTRATOR):
             return True
         else:
             return False
+
 
 async def get_poster(query, bulk=False, id=False, file=None):
     if not id:
