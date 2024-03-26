@@ -13,7 +13,7 @@ from typing import List
 from database.users_chats_db import db
 from bs4 import BeautifulSoup
 import requests
-from database.join_reqs import JoinReqs as db2
+from database.join_reqs import JoinReqs
 
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)
@@ -50,9 +50,10 @@ async def is_subscribed(bot, query):
     elif query.from_user.id in ADMINS:
         return True
 
-    if db2().isActive():
-        user = await db2().get_user(query.from_user.id)
-        if user:
+    if JoinReqs().isActive():
+        user1 = await JoinReqs().get_user(query.from_user.id, channel=1)
+        user2 = await JoinReqs().get_user(query.from_user.id, channel=2)
+        if user1 and user2:
             return True
         else:
             return False
