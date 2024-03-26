@@ -9,6 +9,12 @@ from info import REQ_CHANNEL1, REQ_CHANNEL2, AUTH_CHANNEL, JOIN_REQS_DB, ADMINS
 logger = getLogger(__name__)
 db = JoinReqs()
 
+INVITE_LINK1 = None
+INVITE_LINK2 = None
+
+# rest of the code...
+
+
 async def ForceSub(bot: Client, event: Message, file_id: str = False, mode="checksub"):
     global INVITE_LINK1, INVITE_LINK2
 
