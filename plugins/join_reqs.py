@@ -75,5 +75,5 @@ async def purge_requests2(client, message):
             text="Purged All Requests for Channel 2.",
             parse_mode=enums.ParseMode.MARKDOWN,
             disable_web_page_preview=True
-)
+                  )
         
