@@ -19,49 +19,48 @@ class JoinReqs:
     def isActive(self):
         return self.client is not None
 
-    async def add_user(self, user_id, first_name, username, date):
+    async def add_user(self, user_id, first_name, username, date, channel):
         try:
-            if self.col1:
-                await self.col1.insert_one({"_id": int(user_id),"user_id": int(user_id), "first_name": first_name, "username": username, "date": date})
-            if self.col2:
-                await self.col2.insert_one({"_id": int(user_id),"user_id": int(user_id), "first_name": first_name, "username": username, "date": date})
+            if channel == 1 and self.col1:
+                await self.col1.insert_one({"_id": int(user_id), "user_id": int(user_id), "first_name": first_name, "username": username, "date": date})
+            elif channel == 2 and self.col2:
+                await self.col2.insert_one({"_id": int(user_id), "user_id": int(user_id), "first_name": first_name, "username": username, "date": date})
         except Exception as e:
             print(f"Error adding user: {e}")
 
-    async def get_user(self, user_id):
-        if self.col1:
+    async def get_user(self, user_id, channel):
+        if channel == 1 and self.col1:
             user = await self.col1.find_one({"user_id": int(user_id)})
-            if user:
-                return user
-        if self.col2:
+            return user
+        elif channel == 2 and self.col2:
             user = await self.col2.find_one({"user_id": int(user_id)})
             return user
 
-    async def get_all_users(self):
+    async def get_all_users(self, channel):
         users = []
-        if self.col1:
+        if channel == 1 and self.col1:
             users.extend(await self.col1.find().to_list(None))
-        if self.col2:
+        elif channel == 2 and self.col2:
             users.extend(await self.col2.find().to_list(None))
         return users
 
-    async def delete_user(self, user_id):
-        if self.col1:
+    async def delete_user(self, user_id, channel):
+        if channel == 1 and self.col1:
             await self.col1.delete_one({"user_id": int(user_id)})
-        if self.col2:
+        elif channel == 2 and self.col2:
             await self.col2.delete_one({"user_id": int(user_id)})
 
-    async def delete_all_users(self):
-        if self.col1:
+    async def delete_all_users(self, channel):
+        if channel == 1 and self.col1:
             await self.col1.delete_many({})
-        if self.col2:
+        elif channel == 2 and self.col2:
             await self.col2.delete_many({})
 
-    async def get_all_users_count(self):
+    async def get_all_users_count(self, channel):
         count = 0
-        if self.col1:
+        if channel == 1 and self.col1:
             count += await self.col1.count_documents({})
-        if self.col2:
+        elif channel == 2 and self.col2:
             count += await self.col2.count_documents({})
         return count
-            
+        
