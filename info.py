@@ -42,7 +42,8 @@ PORT = environ.get("PORT", "8080")
 DATABASE_URI = environ.get('DATABASE_URI', "")
 DATABASE_NAME = environ.get('DATABASE_NAME', "Rajappan")
 COLLECTION_NAME = environ.get('COLLECTION_NAME', 'Telegram_files')
-JOIN_REQS_DB = environ.get("JOIN_REQS_DB", DATABASE_URI)
+JOIN_REQS_DB1 = environ.get("JOIN_REQS_DB1", DATABASE_URI)
+JOIN_REQS_DB2 = environ.get("JOIN_REQS_DB2", DATABASE_URI)
 
 # Others
 LOG_CHANNEL = int(environ.get('LOG_CHANNEL', 0))
