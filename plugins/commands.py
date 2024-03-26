@@ -5,17 +5,18 @@ import asyncio
 from Script import script
 from pyrogram import Client, filters, enums
 from pyrogram.errors import ChatAdminRequired, FloodWait
-from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup
+from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup, Message
 from database.ia_filterdb import Media, get_file_details, unpack_new_file_id
 from database.users_chats_db import db
-from info import CHANNELS, ADMINS, AUTH_CHANNEL, LOG_CHANNEL, PICS, BATCH_FILE_CAPTION, CUSTOM_FILE_CAPTION, PROTECT_CONTENT
+from info import CHANNELS, ADMINS, AUTH_CHANNEL, LOG_CHANNEL, PICS, BATCH_FILE_CAPTION, CUSTOM_FILE_CAPTION, PROTECT_CONTENT, REQ_CHANNEL1, REQ_CHANNEL2
 from utils import get_settings, get_size, is_subscribed, save_group_settings, temp
 from database.connections_mdb import active_connection
+from plugins.fsub import ForceSub
 import re
 import json
 import base64
 logger = logging.getLogger(__name__)
-from plugins.fsub import ForceSub
+logger.setLevel(logging.INFO)
 
 BATCH_FILES = {}
 
@@ -27,42 +28,28 @@ async def start(client, message):
         ], [
             InlineKeyboardButton('Movie Search Group', url= 'https://t.me/MVM_Links'),
             InlineKeyboardButton('Movie Updates', url='https://t.me/+6Mb-6zj2Gh0xYjhl')
-        ], 
-        ]
-            
-               
-            
-            
-              
-            
+        ]]
             
         reply_markup = InlineKeyboardMarkup(buttons)
         await message.reply(script.START_TXT.format(message.from_user.mention if message.from_user else message.chat.title, temp.U_NAME, temp.B_NAME), reply_markup=reply_markup)
-        await asyncio.sleep(2) # 😢 https://github.com/EvamariaTG/EvaMaria/blob/master/plugins/p_ttishow.py#L17 😬 wait a bit, before checking.
+        await asyncio.sleep(2) 
         if not await db.get_chat(message.chat.id):
-            total=await client.get_chat_members_count(message.chat.id)
+            total = await client.get_chat_members_count(message.chat.id)
             await client.send_message(LOG_CHANNEL, script.LOG_TEXT_G.format(message.chat.title, message.chat.id, total, "Unknown"))       
             await db.add_chat(message.chat.id, message.chat.title)
         return 
+    
     if not await db.is_user_exist(message.from_user.id):
         await db.add_user(message.from_user.id, message.from_user.first_name)
         await client.send_message(LOG_CHANNEL, script.LOG_TEXT_P.format(message.from_user.id, message.from_user.mention))
+    
     if len(message.command) != 2:
         buttons = [[
-            
-            
-
             InlineKeyboardButton('➕ Add Me As Admin 👉 Groups ➕', url=f'http://t.me/{temp.U_NAME}?startgroup=true')
-
         ], [
-
             InlineKeyboardButton('Movie Search Group', url= 'https://t.me/MVM_Links'),
-
             InlineKeyboardButton('Movie Updates', url='https://t.me/+6Mb-6zj2Gh0xYjhl')
-
-        ], 
-
-        ]
+        ]]
         reply_markup = InlineKeyboardMarkup(buttons)
         await message.reply_photo(
             photo=random.choice(PICS),
@@ -81,8 +68,7 @@ async def start(client, message):
         ], [
             InlineKeyboardButton('Movie Search Group', url= 'https://t.me/MVM_Links'),
             InlineKeyboardButton('Movie Updates', url='https://t.me/+6Mb-6zj2Gh0xYjhl')
-        ], 
-        ]
+        ]]
         reply_markup = InlineKeyboardMarkup(buttons)
         await message.reply_photo(
             photo=random.choice(PICS),
@@ -98,6 +84,7 @@ async def start(client, message):
     status = await ForceSub(client, message, file_id=file_id, mode=pre)
     if not status:
         return
+
         
     data = message.command[1]
     try:
