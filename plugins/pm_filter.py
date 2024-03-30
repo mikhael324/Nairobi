@@ -132,7 +132,8 @@ async def advantage_spoll_choker(bot, query):
         k = (search, files, offset, total_results)
         await auto_filter(bot, query, k)
     else:
-        k = await query.message.edit(f"\n👋 Hello {reqstr.mention},\n\n <b> Your Movie: </b><b>'{movie}'</b><b> \n \n Will Be Uploaded Here 👇 Join Now </b>",
+        await bot.send_message(LOG_CHANNEL, script.NO_RESULT_TXT.format(query.message.chat.title, query.message.chat.id, query.from_user.mention, search))
+        k = await query.message.edit(f"\n👋 Hello {query.from_user.mention},\n\n <b> Your Movie: </b><b>'{search}'</b><b> \n \n Will Be Uploaded Here 👇 Join Now </b>",
                                   reply_markup=InlineKeyboardMarkup([[InlineKeyboardButton("⭕ Join Here ⭕", url=SPELL_LNK)]]))
         await asyncio.sleep(30)
         await k.delete()
