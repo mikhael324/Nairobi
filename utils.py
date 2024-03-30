@@ -1,6 +1,6 @@
 import logging
 from pyrogram.errors import InputUserDeactivated, UserNotParticipant, FloodWait, UserIsBlocked, PeerIdInvalid
-from info import AUTH_CHANNEL, REQ_CHANNEL1, REQ_CHANNEL2, ADMINS, LONG_IMDB_DESCRIPTION, MAX_LIST_ELM
+from info import AUTH_CHANNEL, REQ_CHANNEL_1, REQ_CHANNEL_2, ADMINS, LONG_IMDB_DESCRIPTION, MAX_LIST_ELM
 from imdb import Cinemagoer
 import asyncio
 from pyrogram.types import Message, InlineKeyboardButton
@@ -13,7 +13,7 @@ from typing import List
 from database.users_chats_db import db
 from bs4 import BeautifulSoup
 import requests
-from database.join_reqs import JoinReqs
+from database.join_reqs import JoinReqs as db2
 
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)
@@ -44,31 +44,31 @@ class temp(object):
     USERS_CANCEL = False
     GROUPS_CANCEL = False
 
-async def is_subscribed(bot, query):
-    if not (AUTH_CHANNEL or REQ_CHANNEL1 or REQ_CHANNEL2):
+async def is_subscribed(bot: Client, query):
+    if not (AUTH_CHANNEL or REQ_CHANNEL_1 or REQ_CHANNEL_2):
         return True
     elif query.from_user.id in ADMINS:
         return True
 
-    if JoinReqs().isActive():
-        user1 = await JoinReqs().get_user(query.from_user.id, channel=1)
-        user2 = await JoinReqs().get_user(query.from_user.id, channel=2)
-        if user1 and user2:
-            return True
-        else:
-            return False
+    if db2().isActive():
+        user_channel_1 = await db2().get_user(query.from_user.id, channel=1)
+        user_channel_2 = await db2().get_user(query.from_user.id, channel=2)
+    
+    if user_channel_1 and user_channel_2:
+        return True
+    else:
+        return False
+
 
     try:
-        user1 = await bot.get_chat_member(REQ_CHANNEL1, query.from_user.id)
-        user2 = await bot.get_chat_member(REQ_CHANNEL2, query.from_user.id)
+        user = await bot.get_chat_member(AUTH_CHANNEL, query.from_user.id)
     except UserNotParticipant:
         return False
     except Exception as e:
         logger.exception(e)
         return False
     else:
-        if (user1.status == enums.ChatMemberStatus.MEMBER or user1.status == enums.ChatMemberStatus.ADMINISTRATOR) and \
-           (user2.status == enums.ChatMemberStatus.MEMBER or user2.status == enums.ChatMemberStatus.ADMINISTRATOR):
+        if not user.status == enums.ChatMemberStatus.BANNED:
             return True
         else:
             return False
