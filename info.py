@@ -30,10 +30,12 @@ auth_channel = environ.get('AUTH_CHANNEL')
 auth_grp = environ.get('AUTH_GROUP')
 AUTH_CHANNEL = int(auth_channel) if auth_channel and id_pattern.search(auth_channel) else None
 AUTH_GROUPS = [int(ch) for ch in auth_grp.split()] if auth_grp else None
-REQ_CHANNEL1 = environ.get("REQ_CHANNEL1", "")
-REQ_CHANNEL1 = int(REQ_CHANNEL1) if REQ_CHANNEL1 and id_pattern.search(REQ_CHANNEL1) else None
-REQ_CHANNEL2 = environ.get("REQ_CHANNEL2", "")
-REQ_CHANNEL2 = int(REQ_CHANNEL2) if REQ_CHANNEL2 and id_pattern.search(REQ_CHANNEL2) else None
+REQ_CHANNEL_1 = environ.get("REQ_CHANNEL_1", "-1001986475298")
+REQ_CHANNEL_1 = int(REQ_CHANNEL_1) if REQ_CHANNEL_1 and id_pattern.search(REQ_CHANNEL_1) else None
+
+REQ_CHANNEL_2 = environ.get("REQ_CHANNEL_2", "-1002055982819")
+REQ_CHANNEL_2 = int(REQ_CHANNEL_2) if REQ_CHANNEL_2 and id_pattern.search(REQ_CHANNEL_2) else None
+
 
 #Port
 PORT = environ.get("PORT", "8080")
@@ -42,8 +44,7 @@ PORT = environ.get("PORT", "8080")
 DATABASE_URI = environ.get('DATABASE_URI', "")
 DATABASE_NAME = environ.get('DATABASE_NAME', "Rajappan")
 COLLECTION_NAME = environ.get('COLLECTION_NAME', 'Telegram_files')
-JOIN_REQS_DB1 = environ.get("JOIN_REQS_DB1", DATABASE_URI)
-JOIN_REQS_DB2 = environ.get("JOIN_REQS_DB2", DATABASE_URI)
+JOIN_REQS_DB = environ.get("JOIN_REQS_DB", DATABASE_URI)
 
 # Others
 LOG_CHANNEL = int(environ.get('LOG_CHANNEL', 0))
