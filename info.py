@@ -33,7 +33,7 @@ AUTH_GROUPS = [int(ch) for ch in auth_grp.split()] if auth_grp else None
 REQ_CHANNEL_1 = environ.get("REQ_CHANNEL_1", "-1002067561371")
 REQ_CHANNEL_1 = int(REQ_CHANNEL_1) if REQ_CHANNEL_1 and id_pattern.search(REQ_CHANNEL_1) else None
 
-REQ_CHANNEL_2 = environ.get("REQ_CHANNEL_2", "-1002054731187")
+REQ_CHANNEL_2 = environ.get("REQ_CHANNEL_2", "-1002031944739")
 REQ_CHANNEL_2 = int(REQ_CHANNEL_2) if REQ_CHANNEL_2 and id_pattern.search(REQ_CHANNEL_2) else None
 
 
