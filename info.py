@@ -44,7 +44,7 @@ PORT = environ.get("PORT", "8080")
 DATABASE_URI = environ.get('DATABASE_URI', "")
 DATABASE_NAME = environ.get('DATABASE_NAME', "Rajappan")
 COLLECTION_NAME = environ.get('COLLECTION_NAME', 'Telegram_files')
-JOIN_REQS_DB = environ.get('JOIN_REQS_DB', "mongodb+srv://joinreq:joinreq@cluster0.iug7n9m.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0")
+JOIN_REQS_DB = environ.get("JOIN_REQS_DB", DATABASE_URI)
 
 # Others
 SPELL_LNK = environ.get('SPELL_LNK', 'https://t.me/+B--kfGbV72k1ODg1')
