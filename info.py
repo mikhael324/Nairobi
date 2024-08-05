@@ -30,7 +30,7 @@ auth_channel = environ.get('AUTH_CHANNEL')
 auth_grp = environ.get('AUTH_GROUP')
 AUTH_CHANNEL = int(auth_channel) if auth_channel and id_pattern.search(auth_channel) else None
 AUTH_GROUPS = [int(ch) for ch in auth_grp.split()] if auth_grp else None
-REQ_CHANNEL_1 = environ.get("REQ_CHANNEL_1", "-1002242881005")
+REQ_CHANNEL_1 = environ.get("REQ_CHANNEL_1", "-1002199645371")
 REQ_CHANNEL_1 = int(REQ_CHANNEL_1) if REQ_CHANNEL_1 and id_pattern.search(REQ_CHANNEL_1) else None
 
 REQ_CHANNEL_2 = environ.get("REQ_CHANNEL_2", "-1002249546809")
@@ -47,7 +47,7 @@ COLLECTION_NAME = environ.get('COLLECTION_NAME', 'Telegram_files')
 JOIN_REQS_DB = environ.get("JOIN_REQS_DB", DATABASE_URI)
 
 # Others
-SPELL_LNK = environ.get('SPELL_LNK', 'https://t.me/+4WmeK8Gr-Q1hZjk9')
+SPELL_LNK = environ.get('SPELL_LNK', 'https://t.me/+IKqLQ_OuRotiYWM1')
 LOG_CHANNEL = int(environ.get('LOG_CHANNEL', 0))
 SUPPORT_CHAT = environ.get('SUPPORT_CHAT', 'TeamEvamaria')
 P_TTI_SHOW_OFF = is_enabled((environ.get('P_TTI_SHOW_OFF', "False")), False)
