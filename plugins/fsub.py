@@ -101,8 +101,10 @@ async def ForceSub(bot: Client, event: Message, file_id: str = False, mode="chec
             ],
             [
                 InlineKeyboardButton("📢 Second Click Here To Join ", url=invite_link_2)
+            ],
+            [
+                InlineKeyboardButton("🔄 Get File ", callback_data=f"{mode}#{file_id}")
             ]
-            
         ]
 
         if file_id is False:
